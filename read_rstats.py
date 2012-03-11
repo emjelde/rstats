@@ -91,17 +91,13 @@ def main():
 
     options, args = parser.parse_args()
 
-    unit = None
-    if options.unit:
-        unit = options.unit
-
     if len(args) == 1 and isfile(args[0]):
         rstats = RStatsHistory(args[0])
 
         print("Daily:")
-        rstats.print_daily(unit)
+        rstats.print_daily(options.unit)
         print("Monthly:")
-        rstats.print_monthly(unit)
+        rstats.print_monthly(options.unit)
     else:
         print("Incorrect arguments")
         sys.exit(2)
