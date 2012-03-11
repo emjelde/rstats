@@ -54,7 +54,7 @@ class RStatsHistory(object):
 
     def _to_unit(self, value, unit=None):
         if unit is not None:
-            unit.lower()
+            unit = unit.lower()
         if unit == 'k':
             return value / 1024
         if unit == 'm':
@@ -79,39 +79,32 @@ class RStatsHistory(object):
         self._print_counters(self.monthly, unit)
 
 def main():
-    import getopt
+    import optparse
     from os.path import isfile
     
-    try:
-        opts, args =  getopt.getopt(sys.argv[1:], "u:", ["unit"])
-    except getopt.GetoptError:
-        print_usage()
-        sys.exit(2)
+    usage = "usage: %prog [options] <filename>"
+    parser = optparse.OptionParser(usage)
+
+    parser.add_option("-u", "--unit",
+                      default = None,
+                      help = "Units b (bytes),k (KiB),m (MiB),g (GiB) default is b")
+
+    options, args = parser.parse_args()
 
     unit = None
-    filename = sys.argv[-1]
+    if options.unit:
+        unit = options.unit
 
-    for o, a in opts:
-        if o in ("-u", "--unit"):
-            unit = a
-        else:
-            assert False, "unhandled option"
-
-    if len(sys.argv) > 1 and isfile(filename):
-        rstats = RStatsHistory(filename)
+    if len(args) == 1 and isfile(args[0]):
+        rstats = RStatsHistory(args[0])
 
         print("Daily:")
         rstats.print_daily(unit)
         print("Monthly:")
         rstats.print_monthly(unit)
     else:
-        print_usage("Missing File")
+        print("Incorrect arguments")
         sys.exit(2)
-
-def print_usage(msg=None):
-    if msg is not None:
-        print(msg)
-    print("usage: [-u --unit K,M,G] <filename>")
 
 if __name__ == "__main__":
     main()
