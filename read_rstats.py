@@ -5,9 +5,6 @@ import gzip
 import struct
 import sys
 
-Bandwidth = namedtuple('Bandwidth', 'date up down')
-Date = namedtuple('Date', 'year month day')
-
 class RStatsHistory(object):
     ID_V0 = 0x30305352
     ID_V1 = 0x31305352
@@ -27,6 +24,7 @@ class RStatsHistory(object):
     def _load_history(self):
         max_daily = 62
         max_monthly = 25
+        Bandwidth = namedtuple('Bandwidth', 'date up down')
 
         daily = []
         monthly = []
@@ -46,13 +44,17 @@ class RStatsHistory(object):
 
         monthlyp, = struct.unpack("i0l", self.rstats_file.read(8))
 
-    def _get_date(self, xtime):
+    @staticmethod
+    def get_date(xtime):
+        Date = namedtuple('Date', 'year month day')
+
         return Date(
             ((xtime >> 16) & 0xFF) + 1900,
             ((xtime >>  8) & 0xFF) + 1,
             xtime & 0xFF)
 
-    def _to_unit(self, value, unit=None):
+    @staticmethod
+    def to_unit(value, unit=None):
         if unit is not None:
             unit = unit.lower()
         if unit == 'k':
@@ -66,11 +68,11 @@ class RStatsHistory(object):
     def _print_counters(self, counters, unit=None):
         for counter in counters:
             if counter.date != 0:
-                date = self._get_date(counter.date)
+                date = self.get_date(counter.date)
                 print("{0}/{1}/{2} : Upload {3} : Download {4}".format(
                     date.year, date.month, date.day,
-                    self._to_unit(counter.up, unit),
-                    self._to_unit(counter.down, unit)))
+                    self.to_unit(counter.up, unit),
+                    self.to_unit(counter.down, unit)))
 
     def print_daily(self, unit=None):
         self._print_counters(self.daily, unit)
