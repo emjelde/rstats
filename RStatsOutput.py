@@ -4,7 +4,7 @@ import json
 import sys
 import optparse
 from os.path import isfile
-from read_rstats import RStatsHistory
+from RStatsHistory import RStatsHistory
     
 class RStatsOutput(object):
     def __init__(self, rstats):
