@@ -24,7 +24,7 @@ class RStatsHistory(object):
     def _load_history(self):
         max_daily = 62
         max_monthly = 25
-        Bandwidth = namedtuple('Bandwidth', 'date up down')
+        Bandwidth = namedtuple('Bandwidth', 'date down up')
 
         daily = []
         monthly = []
