@@ -61,7 +61,7 @@ class RStatsHistory(object):
             return value / 1024
         if unit == 'm':
             return value / (1024 * 1024)
-        elif unit == 'g':
+        if unit == 'g':
             return value / (1024 * 1024 * 1024)
         return value
 
