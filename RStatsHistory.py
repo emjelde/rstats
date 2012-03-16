@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from collections import namedtuple
+from datetime import date
 import gzip
 import struct
 import sys
@@ -46,12 +47,11 @@ class RStatsHistory(object):
 
     @staticmethod
     def get_date(xtime):
-        Date = namedtuple('Date', 'year month day')
+        year  = ((xtime >> 16) & 0xFF) + 1900
+        month = ((xtime >>  8) & 0xFF) + 1
+        day   = xtime & 0xFF
 
-        return Date(
-            ((xtime >> 16) & 0xFF) + 1900,
-            ((xtime >>  8) & 0xFF) + 1,
-            xtime & 0xFF)
+        return date(year, month, 1 if day == 0 else day)
 
     @staticmethod
     def to_unit(value, unit=None):

@@ -10,17 +10,17 @@ class RStatsOutput(object):
     def __init__(self, rstats):
         self.rstats = rstats
 
-    def to_json(self, unit=None, indent=None):
+    def to_json(self, unit_daily=None, unit_monthly=None, indent=None):
         day_fmt = []
         month_fmt = []
 
         for day in self.rstats.daily:
             if day.date != 0:
-                day_fmt.append(self.counter(day, unit))
+                day_fmt.append(self.counter(day, unit_daily))
         
         for month in self.rstats.monthly:
             if month.date != 0:
-                month_fmt.append(self.counter(month, unit))
+                month_fmt.append(self.counter(month, unit_monthly))
         
         print json.dumps({
             "daily" : day_fmt,
@@ -36,7 +36,7 @@ class RStatsOutput(object):
 
     def format_date(self, xtime):
         date = RStatsHistory.get_date(xtime)
-        return "{0}/{1}/{2}".format(date.year, date.month, date.day)
+        return date.strftime("%Y/%m/%d")
 
 def main():
     usage = "usage: %prog [options] <filename>"
@@ -47,16 +47,20 @@ def main():
                       default = None,
                       help = "Indent JSON")
 
-    parser.add_option("-u", "--unit",
+    parser.add_option("-d", "--daily",
                       default = None,
-                      help = "Units b (bytes),k (KiB),m (MiB),g (GiB) default is b")
+                      help = "Daily units b (bytes),k (KiB),m (MiB),g (GiB) default is b")
+
+    parser.add_option("-m", "--monthly",
+                      default = None,
+                      help = "Monthly units b (bytes),k (KiB),m (MiB),g (GiB) default is b")
 
     options, args = parser.parse_args()
 
     if len(args) == 1 and isfile(args[0]):
         history = RStatsHistory(args[0])
         output = RStatsOutput(history)
-        output.to_json(options.unit, options.indent)
+        output.to_json(options.daily, options.monthly, options.indent)
     else:
         print("Incorrect arguments")
         sys.exit(2)
