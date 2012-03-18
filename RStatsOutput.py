@@ -22,10 +22,10 @@ class RStatsOutput(object):
             if month.date != 0:
                 month_fmt.append(self.counter(month, unit_monthly))
         
-        print json.dumps({
+        print(json.dumps({
             "daily" : day_fmt,
             "monthly" : month_fmt
-        }, sort_keys=True, indent=indent)
+        }, sort_keys=True, indent=indent))
 
     def counter(self, bandwidth, unit):
         return {
