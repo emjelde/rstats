@@ -68,9 +68,8 @@ class RStatsHistory(object):
     def _print_counters(self, counters, unit=None):
         for counter in counters:
             if counter.date != 0:
-                date = self.get_date(counter.date)
-                print("{0}/{1}/{2} : Upload {3} : Download {4}".format(
-                    date.year, date.month, date.day,
+                print("{0} : Upload {1} : Download {2}".format(
+                    self.get_date(counter.date).strftime("%Y/%m/%d"),
                     self.to_unit(counter.up, unit),
                     self.to_unit(counter.down, unit)))
 
