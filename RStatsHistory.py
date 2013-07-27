@@ -57,12 +57,12 @@ class RStatsHistory(object):
     def to_unit(value, unit=None):
         if unit is not None:
             unit = unit.lower()
-        if unit == 'k':
-            return value / 1024
-        if unit == 'm':
-            return value / (1024 * 1024)
-        if unit == 'g':
-            return value / (1024 * 1024 * 1024)
+            if unit == 'k':
+                return value / 1024
+            if unit == 'm':
+                return value / (1024 * 1024)
+            if unit == 'g':
+                return value / (1024 * 1024 * 1024)
         return value
 
     def _print_counters(self, counters, unit=None):
